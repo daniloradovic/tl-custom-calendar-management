@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->text('description');
             $table->dateTime('start_time');
@@ -25,7 +25,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
-            
+
         });
     }
 

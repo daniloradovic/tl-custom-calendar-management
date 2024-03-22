@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('event_invitees', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedInteger('event_id');
+            $table->unsignedBigInteger('event_id');
             $table->string('email');
             $table->foreign('event_id')
                 ->references('id')
