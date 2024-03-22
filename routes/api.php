@@ -9,8 +9,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-
 Route::middleware('auth:api')->namespace('api')->group(function () {
     Route::apiResource('events', 'App\Http\Controllers\Api\EventsController');
-    Route::get('locations', 'App\Http\Controllers\Api\EventsController@locations');
+    Route::get('locations', 'App\Http\Controllers\Api\EventsController@locations')->name('locations');
 });
