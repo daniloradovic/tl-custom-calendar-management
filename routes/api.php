@@ -11,3 +11,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('events/locations', 'App\Http\Controllers\Api\EventsController@locations')->name('events.locations');
     Route::apiResource('events', 'App\Http\Controllers\Api\EventsController');
 });
+
+Route::post('register', 'App\Http\Controllers\Api\Auth\RegisterController@register')->name('register');
