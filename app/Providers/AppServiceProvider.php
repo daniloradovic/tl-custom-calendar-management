@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Contracts\WeatherServiceInterface;
 use App\Services\WeatherApiService;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,10 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(
-            WeatherServiceInterface::class,
-            WeatherApiService::class
-        );
+        $this->app->bind(WeatherServiceInterface::class, WeatherApiService::class);
     }
 
     /**
@@ -24,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
     }
 }

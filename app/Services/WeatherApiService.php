@@ -19,7 +19,7 @@ class WeatherApiService implements WeatherServiceInterface
     {
         $cacheKey = "weather.{$location}.{$date}";
 
-        return Cache::remember($cacheKey, 60, function () use($location) {
+        return Cache::remember($cacheKey, 86400, function () use($location) {
             try {
                 $response = Http::get('http://api.weatherapi.com/v1/forecast.json', [
                     'key' => config('services.weatherapi.key'),
@@ -27,7 +27,13 @@ class WeatherApiService implements WeatherServiceInterface
                     'days' => 1,
                 ]);
 
-                return $response->json();
+                $weatherConditions = [
+                    'weather' => $response['current']['condition']['text'],
+                    'temperature' => $response['current']['temp_c'],
+                    'perciptation' => $response['current']['precip_mm'],
+                ];
+
+                return $weatherConditions;
             } catch (\Exception $e) {
                 return ['error' => 'Failed to fetch weather data'];
             }
