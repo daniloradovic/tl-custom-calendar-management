@@ -11,12 +11,22 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class EventsController
+ *
+ * This class is responsible for handling API requests related to events.
+ */
 class EventsController extends Controller
 {
     public function __construct(private WeatherServiceInterface $weatherService)
     {
     }
 
+    /**
+     * Retrieve a list of events.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -36,8 +46,8 @@ class EventsController extends Controller
             $events = $user->events()
                 ->whereBetween('start_time', [$start_time, $end_time])
                 ->orWhereBetween('end_time', [$start_time, $end_time])
-                ->orWhere(function($query) use ($start_time, $end_time) {
-                    $query->where('start_time','<',$start_time)->where('end_time', '>', $end_time);
+                ->orWhere(function ($query) use ($start_time, $end_time) {
+                    $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
                 ->get();
 
@@ -48,8 +58,18 @@ class EventsController extends Controller
         return response()->json($events, 200);
     }
 
-    public function show(Event $event)
+    /**
+     * Display the specified event.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(int $id)
     {
+        $event = Event::find($id);
+        if (! $event) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
         $user = Auth::user();
         if ($user->cannot('view', $event)) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -63,6 +83,12 @@ class EventsController extends Controller
         return response()->json($event, 200);
     }
 
+    /**
+     * Store a new event.
+     *
+     * @param  StoreEventRequest  $request  The request object containing the event data.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StoreEventRequest $request)
     {
         $user = Auth::user();
@@ -85,8 +111,19 @@ class EventsController extends Controller
         return response()->json($event, 201);
     }
 
-    public function destroy(Event $event)
+    /**
+     * Delete an event.
+     *
+     * @param  Event  $event  The event to be deleted.
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $id)
     {
+        $event = Event::find($id);
+        if (! $event) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
         // Check if user is authorized to delete the event
         $user = Auth::user();
         if (! $user->can('delete', $event)) {
@@ -99,6 +136,13 @@ class EventsController extends Controller
         return response()->json(null, 204);
     }
 
+    /**
+     * Update an event.
+     *
+     * @param  StoreEventRequest  $request  The request object containing the event data.
+     * @param  Event  $event  The event to be updated.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(StoreEventRequest $request, Event $event)
     {
         $user = Auth::user();
@@ -114,6 +158,11 @@ class EventsController extends Controller
         return response()->json($event, 200);
     }
 
+    /**
+     * Retrieve the locations for the events.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function locations(Request $request)
     {
         $user = Auth::user();
@@ -132,8 +181,8 @@ class EventsController extends Controller
             $locations = $user->events()
                 ->whereBetween('start_time', [$start_time, $end_time])
                 ->orWhereBetween('end_time', [$start_time, $end_time])
-                ->orWhere(function($query) use ($start_time, $end_time) {
-                    $query->where('start_time','<',$start_time)->where('end_time', '>', $end_time);
+                ->orWhere(function ($query) use ($start_time, $end_time) {
+                    $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
                 ->select('location')
                 ->distinct()
