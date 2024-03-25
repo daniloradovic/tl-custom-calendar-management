@@ -10,6 +10,7 @@ use App\Jobs\UpdateInvitees;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class EventsController
@@ -35,6 +36,12 @@ class EventsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+        $cache_key = "user_{$user->id}_events";
+
+        if (Cache::has($cache_key)) {
+            return response()->json(Cache::get($cache_key), 200);
+        }
+
         $start_time = $request->query('start_time');
         $end_time = $request->query('end_time');
 
@@ -49,11 +56,15 @@ class EventsController extends Controller
                 ->orWhere(function ($query) use ($start_time, $end_time) {
                     $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
+                ->with('invitees')
                 ->get();
-
         } else {
-            $events = $user->events()->get();
+            $events = $user->events()
+                ->with('invitees')
+                ->get();
         }
+
+        Cache::put($cache_key, $events, now()->addMinutes(5));
 
         return response()->json($events, 200);
     }
