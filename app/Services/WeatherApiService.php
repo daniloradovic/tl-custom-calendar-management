@@ -10,16 +10,12 @@ class WeatherApiService implements WeatherServiceInterface
 {
     /**
      * Get the weather data for a location and date.
-     *
-     * @param string $location
-     * @param string $date
-     * @return array
      */
     public function getWeatherData(string $location, string $date): array
     {
         $cacheKey = "weather.{$location}.{$date}";
 
-        return Cache::remember($cacheKey, 86400, function () use($location) {
+        return Cache::remember($cacheKey, 86400, function () use ($location) {
             try {
                 $response = Http::get('http://api.weatherapi.com/v1/forecast.json', [
                     'key' => config('services.weatherapi.key'),
@@ -28,7 +24,7 @@ class WeatherApiService implements WeatherServiceInterface
                 ]);
 
                 $weatherConditions = [
-                    'weather' => $response['current']['condition']['text'],
+                    'forecast' => $response['current']['condition']['text'],
                     'temperature' => $response['current']['temp_c'],
                     'perciptation' => $response['current']['precip_mm'],
                 ];

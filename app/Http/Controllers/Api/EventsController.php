@@ -37,12 +37,6 @@ class EventsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $cache_key = "user_{$user->id}_events";
-
-        if (Cache::has($cache_key)) {
-            return response()->json(Cache::get($cache_key), 200);
-        }
-
         $start_time = $request->query('start_time');
         $end_time = $request->query('end_time');
 
@@ -57,15 +51,15 @@ class EventsController extends Controller
                 ->orWhere(function ($query) use ($start_time, $end_time) {
                     $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
+                ->orderBy('start_time')
                 ->with('invitees')
-                ->get();
+                ->paginate(5);
         } else {
             $events = $user->events()
                 ->with('invitees')
-                ->get();
+                ->orderBy('start_time')
+                ->paginate(5);
         }
-
-        Cache::put($cache_key, $events, now()->addMinutes(5));
 
         return response()->json($events, 200);
     }
@@ -89,6 +83,7 @@ class EventsController extends Controller
 
         $weather_data = $this->weatherService->getWeatherData($event->location, $event->start_time);
         $invitees = $event->invitees()->pluck('email', 'id')->toArray();
+
         $event->invitees = $invitees;
         $event->weather = $weather_data;
 
@@ -116,6 +111,11 @@ class EventsController extends Controller
         }
 
         $event = $user->events()->create($request->validated());
+
+        $weather_data = $this->weatherService->getWeatherData($event->location, $event->start_time);
+
+        $event->weather = $weather_data;
+        $event->invitees = $invitees;
 
         // send email to invitees in the background using a job
         CreateInvitees::dispatch($invitees, $event);
@@ -196,20 +196,23 @@ class EventsController extends Controller
                 ->orWhere(function ($query) use ($start_time, $end_time) {
                     $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
-                ->select('location')
+                ->select('start_time', 'location')
+                ->orderBy('start_time')
                 ->distinct()
-                ->pluck('location');
+                ->pluck('location', 'start_time');
         } else {
             $locations = $user->events()
-                ->select('location')
+                ->orderBy('start_time')
+                ->select('start_time', 'location')
                 ->distinct()
-                ->pluck('location');
+                ->pluck('location', 'start_time');
         }
 
         $event_data = [];
         foreach ($locations as $location) {
             $event_data[] = [
                 'location' => $location,
+                'start_time' => $locations['start_time'],
                 'weather_conditions' => $this->weatherService->getWeatherData($location, $start_time),
             ];
         }

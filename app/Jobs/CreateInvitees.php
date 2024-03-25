@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\EventInvitation;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,15 +31,7 @@ class CreateInvitees implements ShouldQueue
         foreach ($this->invitees as $invitee) {
             $this->event->invitees()->create(['email' => $invitee]);
 
-            $to = $invitee;
-            $subject = "Invitation to Event";
-            $message = "You have been invited to an event. Please RSVP.";
-            
-            Mail::raw($message, function ($mail) use ($to, $subject) {
-                $mail->from('mailman.danjo@gmail.com');
-                $mail->to($to);
-                $mail->subject($subject);
-            });
+            Mail::to($invitee)->send(new EventInvitation($this->event));
         }
     }
 }
