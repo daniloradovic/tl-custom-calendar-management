@@ -27,6 +27,11 @@ class EventsController extends Controller
      * Retrieve a list of events.
      *
      * @param  Request  $request  The request object.
+     *
+     * @LRDparam  start_time (YYYY-MM-DD).
+     * @LRDparam  end_time (YYYY-MM-DD).
+     * @LRDparam  page integer.
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -171,6 +176,9 @@ class EventsController extends Controller
     /**
      * Retrieve the locations for the events.
      *
+     * @LRDparam  start_time (YYYY-MM-DD).
+     * @LRDparam  end_time (YYYY-MM-DD).
+     *
      * @param  Request  $request  The request object.
      * @return \Illuminate\Http\JsonResponse
      */
@@ -181,8 +189,8 @@ class EventsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $start_time = $request->query('start_time');
-        $end_time = $request->query('end_time');
+        $start_time = $request->has('start_time') ? $request->query('start_time') : null;
+        $end_time = $request->has('end_time') ? $request->query('end_time') : null;
 
         if (! empty($start_time) && ! empty($end_time)) {
             if ($start_time > $end_time) {
@@ -195,24 +203,25 @@ class EventsController extends Controller
                 ->orWhere(function ($query) use ($start_time, $end_time) {
                     $query->where('start_time', '<', $start_time)->where('end_time', '>', $end_time);
                 })
-                ->select('start_time', 'location')
+                ->select('start_time', 'end_time', 'location')
                 ->orderBy('start_time')
                 ->distinct()
-                ->pluck('location', 'start_time');
+                ->get('location', 'start_time', 'end_time');
         } else {
             $locations = $user->events()
                 ->orderBy('start_time')
-                ->select('start_time', 'location')
+                ->select('start_time', 'end_time', 'location')
                 ->distinct()
-                ->pluck('location', 'start_time');
+                ->get('location', 'start_time', 'end_time');
         }
 
         $event_data = [];
-        foreach ($locations as $start_time => $location) {
+        foreach ($locations as $location) {
             $event_data[] = [
-                'location' => $location,
-                'start_time' => $start_time,
-                'weather_conditions' => $this->weatherService->getWeatherData($location, $start_time),
+                'location' => $location->location,
+                'start_time' => $location->start_time,
+                'end_time' => $location->end_time,
+                'weather_conditions' => $this->weatherService->getWeatherData($location->location, $location->start_time),
             ];
         }
 

@@ -8,8 +8,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum', 'throttle:100,1')->group(function () {
-    Route::get('events/locations', 'App\Http\Controllers\Api\EventsController@locations')->name('events.locations');
     Route::apiResource('events', 'App\Http\Controllers\Api\EventsController');
+    Route::get('locations', 'App\Http\Controllers\Api\EventsController@locations')->name('events.locations');
 });
 
 Route::post('register', 'App\Http\Controllers\Api\Auth\RegisterController@register')->name('api.register');

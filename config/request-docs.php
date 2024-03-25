@@ -31,7 +31,7 @@ return [
     ],
 
     'hide_meta_data' => false,
-    'hide_sql_data' => false,
+    'hide_sql_data' => true,
     'hide_logs_data' => false,
     'hide_models_data' => false,
 
@@ -51,7 +51,6 @@ return [
         'Accept' => 'application/json',
         'Authorization' => 'Bearer {token}',
     ],
-
     // By default, LRD group your routes by the first /path.
     // This is a set of regex to group your routes by prefix.
     'group_by' => [
