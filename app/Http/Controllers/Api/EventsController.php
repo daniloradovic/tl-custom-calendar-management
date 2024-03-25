@@ -163,9 +163,9 @@ class EventsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        UpdateInvitees::dispatch($event, $request->invitees);
-
         $event->update($request->validated());
+
+        UpdateInvitees::dispatch($event, $request->invitees);
 
         return response()->json($event, 200);
     }
