@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Contracts\WeatherServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use App\Jobs\CreateInvitees;
 use App\Jobs\UpdateInvitees;
 use App\Models\Event;
@@ -154,7 +155,7 @@ class EventsController extends Controller
      * @param  Event  $event  The event to be updated.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(StoreEventRequest $request, Event $event)
+    public function update(UpdateEventRequest $request, Event $event)
     {
         $user = Auth::user();
         // Check if user is authorized to update the event
