@@ -12,4 +12,4 @@ Route::middleware('auth:sanctum', 'throttle:100,1')->group(function () {
     Route::apiResource('events', 'App\Http\Controllers\Api\EventsController');
 });
 
-Route::post('register', 'App\Http\Controllers\Api\Auth\RegisterController@register')->name('register');
+Route::post('register', 'App\Http\Controllers\Api\Auth\RegisterController@register')->name('api.register');

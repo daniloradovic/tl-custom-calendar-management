@@ -11,7 +11,6 @@ use App\Jobs\UpdateInvitees;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * Class EventsController
@@ -27,6 +26,7 @@ class EventsController extends Controller
     /**
      * Retrieve a list of events.
      *
+     * @param  Request  $request  The request object.
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -67,6 +67,7 @@ class EventsController extends Controller
     /**
      * Display the specified event.
      *
+     * @param  int  $id  The event ID.
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -126,7 +127,7 @@ class EventsController extends Controller
     /**
      * Delete an event.
      *
-     * @param  Event  $event  The event to be deleted.
+     * @param  int  $id  The event ID.
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -136,13 +137,11 @@ class EventsController extends Controller
             return response()->json(['error' => 'Event not found'], 404);
         }
 
-        // Check if user is authorized to delete the event
         $user = Auth::user();
         if (! $user->can('delete', $event)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // Soft delete the event
         $event->delete();
 
         return response()->json(null, 204);
@@ -151,14 +150,13 @@ class EventsController extends Controller
     /**
      * Update an event.
      *
-     * @param  StoreEventRequest  $request  The request object containing the event data.
+     * @param  UpdateEventRequest  $request  The request object containing the event data.
      * @param  Event  $event  The event to be updated.
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
         $user = Auth::user();
-        // Check if user is authorized to update the event
         if (! $user->can('update', $event)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -173,6 +171,7 @@ class EventsController extends Controller
     /**
      * Retrieve the locations for the events.
      *
+     * @param  Request  $request  The request object.
      * @return \Illuminate\Http\JsonResponse
      */
     public function locations(Request $request)
@@ -209,10 +208,10 @@ class EventsController extends Controller
         }
 
         $event_data = [];
-        foreach ($locations as $location) {
+        foreach ($locations as $start_time => $location) {
             $event_data[] = [
                 'location' => $location,
-                'start_time' => $locations['start_time'],
+                'start_time' => $start_time,
                 'weather_conditions' => $this->weatherService->getWeatherData($location, $start_time),
             ];
         }
