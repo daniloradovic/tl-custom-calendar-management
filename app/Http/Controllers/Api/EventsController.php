@@ -32,7 +32,7 @@ class EventsController extends Controller
      * @LRDparam  end_time (YYYY-MM-DD).
      * @LRDparam  page integer.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
@@ -66,14 +66,19 @@ class EventsController extends Controller
                 ->paginate(5);
         }
 
-        return response()->json($events, 200);
+        return response()->json([
+            'events' => $events->items(),
+            'total' => $events->total(),
+            'per_page' => $events->perPage(),
+            'current_page' => $events->currentPage(),
+        ]);
     }
 
     /**
      * Display the specified event.
      *
      * @param  int  $id  The event ID.
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id)
     {
@@ -217,6 +222,7 @@ class EventsController extends Controller
 
         $event_data = [];
         foreach ($locations as $location) {
+
             $event_data[] = [
                 'location' => $location->location,
                 'start_time' => $location->start_time,
