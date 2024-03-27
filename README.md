@@ -1,6 +1,6 @@
-# TinkerList Calendar Management System - MVP
+# TinkerList MVP Calendar Management System
 
-MVP Calendar Management System - API Events.
+API Events for Calendar Management System MVP.
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ MVP Calendar Management System - API Events.
     npm run build
     ```
 
-4. For emails to generate, run:
+4. To generate emails, run:
 
     ```bash
     php artisan queue:work
@@ -50,22 +50,13 @@ MVP Calendar Management System - API Events.
     valet park
     ```
 
-2. Open your browser and visit `http://tl-custom-calendar-management.test` to view the application.
+2. Open your browser and visit `http://tl-custom-calendar-management.test` to access the application.
 
-3. For more Valet details, check the official documentation [here](https://laravel.com/docs/11.x/valet).
+3. Refer to the [official documentation](https://laravel.com/docs/11.x/valet) for more details on Valet.
 
-## Contributing
+4. The service is hosted on DigitalOcean. You can explore the interactive [API Docs](https://lionfish-app-nzcgq.ondigitalocean.app/api-docs) to access each implemented endpoint. For the MVP, App Platform has been deployed with a basic web service app and a worker for emails.
 
-Contributions are welcome! Please follow these steps:
+5. Execute tests with the command:
 
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Commit your changes.
-5. Push to the branch.
-6. Open a pull request.
-
-## License
-
-
-This project is licensed under the [MIT License](LICENSE).
+```bash
+./vendor/bin/phpunit
