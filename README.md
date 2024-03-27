@@ -66,6 +66,8 @@ For test coverage run:
 ```bash
 ./vendor/bin/phpunit --coverage-text --colors=never
 ```
+<img width="684" alt="image" src="https://github.com/daniloradovic/tl-custom-calendar-management/assets/3967558/2a67ae63-f143-45ee-8065-c91cb5edb35e">
+
 6. I provided also a quick video walk trough of how to use a interactive api doc for testing endpoints [Part 1](https://www.loom.com/share/2a7ee28e9bb54a84ab7d141543964b7c?sid=58429441-37db-4c43-b707-61f565347a1f) and [Part 2](https://www.loom.com/share/87e62c461f3148ebaeb8d72a54935929?sid=89961f30-632e-46e7-9b14-9d307ea1c79d)
 
 
