@@ -38,6 +38,8 @@ API Events for Calendar Management System MVP.
     php artisan queue:work
     ```
 
+5. Add ```WEATHER_API_KEY=``` to the .env file (Get it from the [WeatherAPI](https://www.weatherapi.com/))
+
 ## 🔌 Usage
 
 1. Start the development server using Laravel Valet:
