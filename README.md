@@ -56,7 +56,7 @@ API Events for Calendar Management System MVP.
 
 4. The service is hosted on DigitalOcean. You can explore the interactive [API Docs](https://lionfish-app-nzcgq.ondigitalocean.app/api-docs) to access each implemented endpoint. For the MVP, App Platform has been deployed with a basic web service app and a worker for emails.
 
-5. Execute tests with the command 📝:
+5. Execute tests with the command 🕵️:
 
 ```bash
 ./vendor/bin/phpunit
@@ -67,5 +67,25 @@ For test coverage run:
 ./vendor/bin/phpunit --coverage-text --colors=never
 ```
 6. I provided also a quick video walk trough of how to use a interactive api doc for testing endpoints [Part 1](https://www.loom.com/share/2a7ee28e9bb54a84ab7d141543964b7c?sid=58429441-37db-4c43-b707-61f565347a1f) and [Part 2](https://www.loom.com/share/87e62c461f3148ebaeb8d72a54935929?sid=89961f30-632e-46e7-9b14-9d307ea1c79d)
+
+
+## Contributing 🤝
+
+Contributions are welcome! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
+
+To contribute to this project, follow these steps:
+
+1. Fork this repository.
+2. Create a new branch: `git checkout -b feature/your-feature-name`.
+3. Make your changes and commit them: `git commit -m 'Add some feature'`.
+4. Push to the original branch: `git push origin feature/your-feature-name`.
+5. Open a pull request.
+
+Please ensure that your contributions adhere to the [code of conduct](CODE_OF_CONDUCT.md).
+
+## License 📝
+
+This project is licensed under the [MIT License](LICENSE).
+
 
 Thanks 😊🎉👨‍💻
