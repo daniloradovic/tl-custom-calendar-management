@@ -37,7 +37,7 @@ jobs:
     - name: Migrate and seed database
       env:
         DB_PORT: 3360
-      run: php artisan migrate --seed
+      run: php artisan migrate
     - name: Execute tests (Unit and Feature tests) using PHPUnit
       env:
         DB_PORT: 3360
